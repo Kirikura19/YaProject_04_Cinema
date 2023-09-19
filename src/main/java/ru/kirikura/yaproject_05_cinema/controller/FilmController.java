@@ -2,15 +2,12 @@ package ru.kirikura.yaproject_05_cinema.controller;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.kirikura.yaproject_05_cinema.exceptions.ValidationException;
 import ru.kirikura.yaproject_05_cinema.model.Film;
+import ru.kirikura.yaproject_05_cinema.service.FilmService;
 
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -18,61 +15,39 @@ import java.util.Map;
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-    private final Map<Integer, Film> films = new HashMap<>();
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private final static Instant MIN_RELEASE_DATA = Instant.from(ZonedDateTime.of(LocalDateTime.of(1895, 12,
-            28, 0, 0), ZoneId.of("Europe/Moscow")));
+    private final FilmService filmService;
 
-    @GetMapping
-    public List<Film> getAllFilms() {
-        return new ArrayList<>(films.values());
+    @Autowired
+    public FilmController(FilmService filmService) {
+        this.filmService = filmService;
     }
 
+    @GetMapping
+    public Map<Integer, Film> findAllFilms() {
+        return filmService.findAllFilms();
+    }
     @PostMapping
-    public Film addFilm(@Valid @RequestBody Film newFilm) throws ValidationException {
-        if (checkIsFilmDataCorrect(newFilm)) {
-            films.put(newFilm.getId(), newFilm);
-            log.info("Добавлен новый фильм id={}", newFilm.getId());
-        }
-        return newFilm;
+    public Film addFilm(@Valid @RequestBody Film film) throws ValidationException {
+        return filmService.addFilm(film);
     }
 
     @PutMapping
-    public Film updateFilm(@Valid @RequestBody Film newFilm) throws ValidationException {
-        if (checkIsFilmDataCorrect(newFilm)) {
-            if (films.containsKey(newFilm.getId())) {
-                films.put(newFilm.getId(), newFilm);
-                log.info("Обновлены данные о фильме id={}", newFilm.getId());
-            } else {
-                throw new ValidationException("Не удалось обновить данные т.к. фильм не найден");
-            }
-        }
-        return newFilm;
+    public Film updateFilm(@Valid @RequestBody Film film) throws ValidationException {
+        return filmService.updateFilm(film);
     }
 
-    public boolean checkIsFilmDataCorrect(Film newFilm) throws ValidationException {
-        if (newFilm.getName() == null || newFilm.getName().isBlank()) {
-            log.info("Не удалось добавить/обновить фильм т.к. не указано название");
-            throw new ValidationException("Не указано название фильма");
-        } else if (newFilm.getDescription() == null || newFilm.getDescription().length() > 200) {
-            log.info("Не удалось добавить/обновить фильм т.к. превышена допустимая длина описания");
-            throw new ValidationException("Превышена допустимая длина описания - 200 символов");
-        } else if (newFilm.getReleaseDate() == null || getInstance(newFilm.getReleaseDate())
-                .isBefore(MIN_RELEASE_DATA)) {
-            log.info("Не удалось добавить/обновить фильм т.к. указана некорректная дата выхода");
-            throw new ValidationException("Указана некорректная дата выхода фильма");
-        } else if (getDuration(newFilm.getDuration()).isNegative() || getDuration(newFilm.getDuration()).isZero()) {
-            log.info("Не удалось добавить/обновить фильм т.к. некорректно указана длительность");
-            throw new ValidationException("Указана некорректная длительность фильма");
-        } else {
-            return true;
-        }
+    @GetMapping("/{id}")
+    public Film getFilmById(@PathVariable int id) throws ValidationException {
+        return filmService.getFilmById(id);
     }
-    private Instant getInstance(String time) {
-        return Instant.from(ZonedDateTime.of(LocalDate.parse(time, dateTimeFormatter),
-                LocalTime.of(0, 0), ZoneId.of("Europe/Moscow")));
+
+    @DeleteMapping("/{id}")
+    public void deleteUserById(@PathVariable int id) throws ValidationException {
+        filmService.deleteUserById(id);
     }
-    private Duration getDuration(long duration) {
-        return Duration.ofMinutes(duration);
+
+    @DeleteMapping()
+    public void deleteAllFilms() {
+        filmService.deleteAllFilms();
     }
 }
