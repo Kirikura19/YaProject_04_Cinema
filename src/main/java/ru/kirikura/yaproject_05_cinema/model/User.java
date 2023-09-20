@@ -1,15 +1,16 @@
 package ru.kirikura.yaproject_05_cinema.model;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import javax.validation.constraints.*;
+
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class User {
-    private static int identificator = 0;
-    private int id = setId();
+    private int id;
     @Email
     private String email;
     @NotBlank
@@ -17,9 +18,7 @@ public class User {
     private String name;
     @NotBlank
     private LocalDate birthday;
-    public int setId() {
-        return ++identificator;
-    }
+    private Set<Integer> friends = new HashSet<>();
 }
 
 
