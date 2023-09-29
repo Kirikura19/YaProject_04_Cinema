@@ -9,8 +9,7 @@ import ru.kirikura.yaproject_05_cinema.model.Film;
 import ru.kirikura.yaproject_05_cinema.service.FilmService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 
 
 @Slf4j
@@ -25,7 +24,7 @@ public class FilmController {
     }
 
     @GetMapping
-    public Map<Integer, Film> findAllFilms() {
+    public List<Film> findAllFilms() throws ObjectNotFoundException {
         return filmService.findAllFilms();
     }
     @PostMapping
@@ -64,7 +63,7 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public ArrayList<Film> findTopFilms(
+    public List<Film> findTopFilms(
             @RequestParam(required = false) Integer count) {
         return filmService.findTopFilms(count);
     }

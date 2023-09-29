@@ -8,21 +8,21 @@ import ru.kirikura.yaproject_05_cinema.exceptions.ValidationException;
 import ru.kirikura.yaproject_05_cinema.model.User;
 import ru.kirikura.yaproject_05_cinema.service.validation.FilmVaidation;
 import ru.kirikura.yaproject_05_cinema.service.validation.UserValidation;
-import ru.kirikura.yaproject_05_cinema.storage.film.FilmStorage;
-import ru.kirikura.yaproject_05_cinema.storage.user.InMemoryUserStorage;
+import ru.kirikura.yaproject_05_cinema.dao.FilmStorage;
+import ru.kirikura.yaproject_05_cinema.dao.impl.UserStorageInMemory;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class UserService {
     FilmStorage filmStorage;
-    InMemoryUserStorage userStorage;
+    UserStorageInMemory userStorage;
     FilmVaidation filmVaidation;
     UserValidation userValidation;
-    public Map<Integer, User> findAllUsers() {
+    public List<User> findAllUsers() throws ObjectNotFoundException {
+        userValidation.checkIsUsersEmpty(userStorage);
         return userStorage.findAllUsers();
     }
     public User addUser(User user) throws ValidationException {
@@ -59,12 +59,12 @@ public class UserService {
         userStorage.removeFriend(userId, friendId);
     }
 
-    public ArrayList<User> findAllFriends(int userId) throws ObjectNotFoundException {
+    public List<User> findAllFriends(int userId) throws ObjectNotFoundException {
         userValidation.checkIsUserExists(userStorage, userId);
         return userStorage.findAllFriends(userId);
     }
 
-    public ArrayList<User> findAllSameFriends(int userId, int anotherUserId) throws ObjectNotFoundException {
+    public List<User> findAllSameFriends(int userId, int anotherUserId) throws ObjectNotFoundException {
         userValidation.checkIsUserExists(userStorage, userId);
         userValidation.checkIsUserExists(userStorage, anotherUserId);
         return userStorage.findAllSameFriends(userId, anotherUserId);

@@ -1,12 +1,11 @@
-package ru.kirikura.yaproject_05_cinema.storage.user;
+package ru.kirikura.yaproject_05_cinema.dao;
 
 import ru.kirikura.yaproject_05_cinema.model.User;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 
 public interface UserStorage {
-    Map<Integer, User> findAllUsers();
+    List<User> findAllUsers();
     User addUser(User user);
     User updateUser(User user);
     User getUserById(int id);
@@ -14,6 +13,6 @@ public interface UserStorage {
     void deleteAllUsers();
     void addFriend(int userId, int friendId);
     void removeFriend(int userId, int friendId);
-    ArrayList<User> findAllFriends(int userId);
-    ArrayList<User> findAllSameFriends(int userId, int anotherUserId);
+    List<User> findAllFriends(int userId);
+    List<User> findAllSameFriends(int userId, int anotherUserId);
 }

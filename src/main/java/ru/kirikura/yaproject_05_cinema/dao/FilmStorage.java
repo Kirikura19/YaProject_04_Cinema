@@ -1,12 +1,11 @@
-package ru.kirikura.yaproject_05_cinema.storage.film;
+package ru.kirikura.yaproject_05_cinema.dao;
 
 import ru.kirikura.yaproject_05_cinema.model.Film;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 
 public interface FilmStorage {
-    Map<Integer, Film> findAllFilms();
+    List<Film> findAllFilms();
     Film addFilm(Film film);
     Film updateFilm(Film film);
     Film getFilmById(int id);
@@ -14,5 +13,5 @@ public interface FilmStorage {
     void deleteAllFilms();
     void addLike(int postId, int userId);
     void removeLike(int postId, int userId);
-    ArrayList<Film> findTopFilms(int x);
+    List<Film> findTopFilms(int x);
 }

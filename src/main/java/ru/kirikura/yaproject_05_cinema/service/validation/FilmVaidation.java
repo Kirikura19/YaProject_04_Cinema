@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.kirikura.yaproject_05_cinema.exceptions.ObjectNotFoundException;
 import ru.kirikura.yaproject_05_cinema.exceptions.ValidationException;
 import ru.kirikura.yaproject_05_cinema.model.Film;
-import ru.kirikura.yaproject_05_cinema.storage.film.FilmStorage;
+import ru.kirikura.yaproject_05_cinema.dao.FilmStorage;
 
 import java.time.LocalDate;
 
@@ -15,9 +15,17 @@ public class FilmVaidation {
 
     private final static LocalDate MIN_DATE = LocalDate.parse("1986-01-01");
 
+    public void checkIsFilmsEmpty(FilmStorage filmStorage) throws ObjectNotFoundException {
+        if(filmStorage.findAllFilms().isEmpty()) {
+            throw new ObjectNotFoundException("Список фильмов пустой.");
+        }
+    }
+
     public void checkIsFilmExists(FilmStorage filmStorage, int id) throws ObjectNotFoundException {
-        if(!filmStorage.findAllFilms().containsKey(id)) {
+        if(filmStorage.findAllFilms().stream()
+                .noneMatch(item -> item.getId() == id)) {
             throw new ObjectNotFoundException("Указанного фильма не существует.");
+
         }
     }
 
@@ -25,7 +33,7 @@ public class FilmVaidation {
         if (newFilm.getName() == null || newFilm.getName().isBlank()) {
             log.info("Не удалось добавить/обновить фильм т.к. не указано название");
             throw new ValidationException("Не указано название фильма");
-        } else if (newFilm.getDescription() == null || newFilm.getDescription().length() > 200) {
+        } else if (newFilm.getDescription() == null  || newFilm.getDescription().length() > 200) {
             log.info("Не удалось добавить/обновить фильм т.к. превышена допустимая длина описания");
             throw new ValidationException("Превышена допустимая длина описания - 200 символов");
         } else if (newFilm.getReleaseDate() == null || newFilm.getReleaseDate().isBefore(MIN_DATE)) {

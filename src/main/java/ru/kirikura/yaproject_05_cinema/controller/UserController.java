@@ -9,9 +9,7 @@ import ru.kirikura.yaproject_05_cinema.model.User;
 import ru.kirikura.yaproject_05_cinema.service.UserService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Map;
-
+import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/users")
@@ -24,7 +22,7 @@ public class UserController {
     }
 
     @GetMapping
-    public Map<Integer, User> findAllUsers() {
+    public List<User> findAllUsers() throws ObjectNotFoundException {
         return userService.findAllUsers();
     }
 
@@ -64,12 +62,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}/friend")
-    public ArrayList<User> findAllFriend(@PathVariable int id) throws ObjectNotFoundException {
+    public List<User> findAllFriend(@PathVariable int id) throws ObjectNotFoundException {
         return userService.findAllFriends(id);
     }
 
     @GetMapping("/{id}/friend/common/{otherId}")
-    public ArrayList<User> findAllSameFriends(@PathVariable int id, @PathVariable int otherId) throws ObjectNotFoundException {
+    public List<User> findAllSameFriends(@PathVariable int id, @PathVariable int otherId) throws ObjectNotFoundException {
         return userService.findAllSameFriends(id, otherId);
     }
 }

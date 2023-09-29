@@ -8,12 +8,12 @@ import ru.kirikura.yaproject_05_cinema.controller.FilmController;
 import ru.kirikura.yaproject_05_cinema.controller.UserController;
 import ru.kirikura.yaproject_05_cinema.service.FilmService;
 import ru.kirikura.yaproject_05_cinema.service.UserService;
-import ru.kirikura.yaproject_05_cinema.storage.film.InMemoryFilmStorage;
-import ru.kirikura.yaproject_05_cinema.storage.user.InMemoryUserStorage;
+import ru.kirikura.yaproject_05_cinema.dao.impl.FilmStorageInMemory;
+import ru.kirikura.yaproject_05_cinema.dao.impl.UserStorageInMemory;
 
 @RestControllerAdvice(assignableTypes = {FilmController.class, UserController.class,
         UserService.class, FilmService.class,
-        InMemoryFilmStorage.class, InMemoryUserStorage.class})
+        FilmStorageInMemory.class, UserStorageInMemory.class})
 public class ErrorHandler {
 
     //HttpRequestMethodNotSupportedException

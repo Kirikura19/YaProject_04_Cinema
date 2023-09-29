@@ -1,21 +1,21 @@
-package ru.kirikura.yaproject_05_cinema.storage.user;
+package ru.kirikura.yaproject_05_cinema.dao.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.kirikura.yaproject_05_cinema.dao.UserStorage;
 import ru.kirikura.yaproject_05_cinema.model.User;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @Slf4j
 @Component
-public class InMemoryUserStorage implements UserStorage {
-    private final Map<Integer, User> users = new HashMap<>();
+public class UserStorageInMemory implements UserStorage {
+    private final List<User> users = new ArrayList<>();
 
     private static int countId;
     @Override
-    public Map<Integer, User> findAllUsers() {
+    public List<User> findAllUsers() {
         log.info("Получен список всех пользователей");
         return users;
     }
@@ -24,14 +24,14 @@ public class InMemoryUserStorage implements UserStorage {
     public User addUser(User user) {
         countId++;
         user.setId(countId);
-        users.put(user.getId(), user);
+        users.add(user);
         log.info("Добавлен новый пользователь с Id "+ countId);
         return user;
     }
 
     @Override
     public User updateUser(User user) {
-        users.put(user.getId(), user);
+        users.add(user);
         log.info("Пользователь "+user.getId()+" обновлен.");
         return user;
     }

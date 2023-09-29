@@ -8,22 +8,22 @@ import ru.kirikura.yaproject_05_cinema.exceptions.ValidationException;
 import ru.kirikura.yaproject_05_cinema.model.Film;
 import ru.kirikura.yaproject_05_cinema.service.validation.FilmVaidation;
 import ru.kirikura.yaproject_05_cinema.service.validation.UserValidation;
-import ru.kirikura.yaproject_05_cinema.storage.film.FilmStorage;
-import ru.kirikura.yaproject_05_cinema.storage.user.InMemoryUserStorage;
+import ru.kirikura.yaproject_05_cinema.dao.FilmStorage;
+import ru.kirikura.yaproject_05_cinema.dao.impl.UserStorageInMemory;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class FilmService {
     FilmStorage filmStorage;
-    InMemoryUserStorage userStorage;
+    UserStorageInMemory userStorage;
     FilmVaidation filmVaidation;
     UserValidation userValidation;
 
-    public Map<Integer, Film> findAllFilms() {
+    public List<Film> findAllFilms() throws ObjectNotFoundException {
+        filmVaidation.checkIsFilmsEmpty(filmStorage);
         return filmStorage.findAllFilms();
     }
 
@@ -63,7 +63,7 @@ public class FilmService {
         filmStorage.removeLike(postId, userId);
     }
 
-    public ArrayList<Film> findTopFilms(Integer count) {
+    public List<Film> findTopFilms(Integer count) {
         if(count == null) {
             count = 10;
         }

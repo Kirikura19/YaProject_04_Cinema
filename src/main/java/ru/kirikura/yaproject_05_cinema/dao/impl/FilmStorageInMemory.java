@@ -1,18 +1,19 @@
-package ru.kirikura.yaproject_05_cinema.storage.film;
+package ru.kirikura.yaproject_05_cinema.dao.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.kirikura.yaproject_05_cinema.dao.FilmStorage;
 import ru.kirikura.yaproject_05_cinema.model.Film;
 
 import java.util.*;
 
 @Slf4j
 @Component
-public class InMemoryFilmStorage implements FilmStorage{
-    private final Map<Integer, Film> films = new HashMap<>();
+public class FilmStorageInMemory implements FilmStorage {
+    private final List<Film> films = new ArrayList<>();
     private static int countId;
     @Override
-    public Map<Integer, Film> findAllFilms() {
+    public List<Film> findAllFilms() {
         log.info("Получен список всех фильмов.");
         return films;
     }
@@ -21,14 +22,14 @@ public class InMemoryFilmStorage implements FilmStorage{
     public Film addFilm(Film film) {
         countId++;
         film.setId(countId);
-        films.put(film.getId(), film);
+        films.add(film);
         log.info("Добавлен новый фильм с Id "+ countId);
         return film;
     }
 
     @Override
     public Film updateFilm(Film film) {
-        films.put(film.getId(), film);
+        films.add(film);
         log.info("Фильм "+film.getId()+" обновлен.");
         return film;
     }
@@ -64,8 +65,8 @@ public class InMemoryFilmStorage implements FilmStorage{
     }
 
     @Override
-    public ArrayList<Film> findTopFilms(int count) {
-        ArrayList<Film> topFilms = new ArrayList<>(films.values());
+    public List<Film> findTopFilms(int count) {
+        List<Film> topFilms = new ArrayList<>(films);
         topFilms.sort(Comparator.comparing(x -> x.getLikes().size()));
         if(!(topFilms.size() <= count)) {
             topFilms.subList(count, topFilms.size()).clear();

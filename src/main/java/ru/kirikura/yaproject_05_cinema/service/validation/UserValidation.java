@@ -5,16 +5,26 @@ import org.springframework.stereotype.Component;
 import ru.kirikura.yaproject_05_cinema.exceptions.ObjectNotFoundException;
 import ru.kirikura.yaproject_05_cinema.exceptions.ValidationException;
 import ru.kirikura.yaproject_05_cinema.model.User;
-import ru.kirikura.yaproject_05_cinema.storage.user.UserStorage;
+import ru.kirikura.yaproject_05_cinema.dao.UserStorage;
 
 import java.time.LocalDate;
 
 @Slf4j
 @Component
 public class UserValidation {
+
+    public void checkIsUsersEmpty(UserStorage userStorage) throws ObjectNotFoundException {
+        if(userStorage.findAllUsers().isEmpty()) {
+            throw new ObjectNotFoundException("Список пользователей пустой.");
+        }
+    }
+
     public void checkIsUserExists(UserStorage userStorage, int id) throws ObjectNotFoundException {
-        if(!userStorage.findAllUsers().containsKey(id)) {
+
+        if(userStorage.findAllUsers().stream()
+                .noneMatch(item -> item.getId() == id)) {
             throw new ObjectNotFoundException("Указанного пользователя не существует.");
+
         }
     }
 
