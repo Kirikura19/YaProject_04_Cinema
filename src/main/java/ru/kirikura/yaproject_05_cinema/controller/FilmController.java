@@ -10,6 +10,7 @@ import ru.kirikura.yaproject_05_cinema.service.FilmService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -24,21 +25,21 @@ public class FilmController {
     }
 
     @GetMapping
-    public List<Film> findAllFilms() throws ObjectNotFoundException {
+    public Optional<List<Film>> findAllFilms() throws ObjectNotFoundException {
         return filmService.findAllFilms();
     }
     @PostMapping
-    public Film addFilm(@Valid @RequestBody Film film) throws ValidationException {
+    public Optional<Film> addFilm(@Valid @RequestBody Film film) throws ValidationException {
         return filmService.addFilm(film);
     }
 
     @PutMapping
-    public Film updateFilm(@Valid @RequestBody Film film) throws ObjectNotFoundException, ValidationException {
+    public Optional<Film> updateFilm(@Valid @RequestBody Film film) throws ObjectNotFoundException, ValidationException {
         return filmService.updateFilm(film);
     }
 
     @GetMapping("/{id}")
-    public Film getFilmById(@PathVariable int id) throws ObjectNotFoundException {
+    public Optional<Film> getFilmById(@PathVariable int id) throws ObjectNotFoundException {
         return filmService.getFilmById(id);
     }
 
@@ -63,7 +64,7 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public List<Film> findTopFilms(
+    public Optional<List<Film>> findTopFilms(
             @RequestParam(required = false) Integer count) {
         return filmService.findTopFilms(count);
     }

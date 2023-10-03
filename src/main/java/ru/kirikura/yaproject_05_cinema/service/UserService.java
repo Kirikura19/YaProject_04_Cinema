@@ -12,6 +12,7 @@ import ru.kirikura.yaproject_05_cinema.dao.FilmStorage;
 import ru.kirikura.yaproject_05_cinema.dao.impl.UserStorageInMemory;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -21,22 +22,22 @@ public class UserService {
     UserStorageInMemory userStorage;
     FilmVaidation filmVaidation;
     UserValidation userValidation;
-    public List<User> findAllUsers() throws ObjectNotFoundException {
+    public Optional<List<User>> findAllUsers() throws ObjectNotFoundException {
         userValidation.checkIsUsersEmpty(userStorage);
         return userStorage.findAllUsers();
     }
-    public User addUser(User user) throws ValidationException {
+    public Optional<User> addUser(User user) throws ValidationException {
         userValidation.checkIsUserDataCorrect(user);
         return userStorage.addUser(user);
     }
 
-    public User updateUser(User user) throws ValidationException, ObjectNotFoundException {
+    public Optional<User> updateUser(User user) throws ValidationException, ObjectNotFoundException {
         userValidation.checkIsUserDataCorrect(user);
         userValidation.checkIsUserExists(userStorage, user.getId());
         return userStorage.updateUser(user);
     }
 
-    public User getUserById(int id) throws ObjectNotFoundException {
+    public Optional<User> getUserById(int id) throws ObjectNotFoundException {
         userValidation.checkIsUserExists(userStorage, id);
         return userStorage.getUserById(id);
     }
@@ -59,12 +60,12 @@ public class UserService {
         userStorage.removeFriend(userId, friendId);
     }
 
-    public List<User> findAllFriends(int userId) throws ObjectNotFoundException {
+    public Optional<List<User>> findAllFriends(int userId) throws ObjectNotFoundException {
         userValidation.checkIsUserExists(userStorage, userId);
         return userStorage.findAllFriends(userId);
     }
 
-    public List<User> findAllSameFriends(int userId, int anotherUserId) throws ObjectNotFoundException {
+    public Optional<List<User>> findAllSameFriends(int userId, int anotherUserId) throws ObjectNotFoundException {
         userValidation.checkIsUserExists(userStorage, userId);
         userValidation.checkIsUserExists(userStorage, anotherUserId);
         return userStorage.findAllSameFriends(userId, anotherUserId);

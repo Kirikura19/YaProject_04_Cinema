@@ -13,31 +13,31 @@ public class FilmStorageInMemory implements FilmStorage {
     private final List<Film> films = new ArrayList<>();
     private static int countId;
     @Override
-    public List<Film> findAllFilms() {
+    public Optional<List<Film>> findAllFilms() {
         log.info("Получен список всех фильмов.");
-        return films;
+        return Optional.of(films);
     }
 
     @Override
-    public Film addFilm(Film film) {
+    public Optional<Film> addFilm(Film film) {
         countId++;
         film.setId(countId);
         films.add(film);
         log.info("Добавлен новый фильм с Id "+ countId);
-        return film;
+        return Optional.of(film);
     }
 
     @Override
-    public Film updateFilm(Film film) {
+    public Optional<Film> updateFilm(Film film) {
         films.add(film);
         log.info("Фильм "+film.getId()+" обновлен.");
-        return film;
+        return Optional.of(film);
     }
 
     @Override
-    public Film getFilmById(int id) {
+    public Optional<Film> getFilmById(int id) {
         log.info("Получен фильм с Id: "+id+".");
-        return films.get(id);
+        return Optional.ofNullable(films.get(id));
     }
 
     @Override
@@ -65,12 +65,12 @@ public class FilmStorageInMemory implements FilmStorage {
     }
 
     @Override
-    public List<Film> findTopFilms(int count) {
+    public Optional<List<Film>> findTopFilms(int count) {
         List<Film> topFilms = new ArrayList<>(films);
         topFilms.sort(Comparator.comparing(x -> x.getLikes().size()));
         if(!(topFilms.size() <= count)) {
             topFilms.subList(count, topFilms.size()).clear();
         }
-        return topFilms;
+        return Optional.of(topFilms);
     }
 }

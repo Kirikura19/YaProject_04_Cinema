@@ -7,6 +7,7 @@ import ru.kirikura.yaproject_05_cinema.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -15,31 +16,31 @@ public class UserStorageInMemory implements UserStorage {
 
     private static int countId;
     @Override
-    public List<User> findAllUsers() {
+    public Optional<List<User>> findAllUsers() {
         log.info("Получен список всех пользователей");
-        return users;
+        return Optional.of(users);
     }
 
     @Override
-    public User addUser(User user) {
+    public Optional<User> addUser(User user) {
         countId++;
         user.setId(countId);
         users.add(user);
         log.info("Добавлен новый пользователь с Id "+ countId);
-        return user;
+        return Optional.of(user);
     }
 
     @Override
-    public User updateUser(User user) {
+    public Optional<User> updateUser(User user) {
         users.add(user);
         log.info("Пользователь "+user.getId()+" обновлен.");
-        return user;
+        return Optional.of(user);
     }
 
     @Override
-    public User getUserById(int id) {
+    public Optional<User> getUserById(int id) {
         log.info("Получен пользователь с Id: "+id+".");
-        return users.get(id);
+        return Optional.of(users.get(id));
     }
 
     @Override
@@ -69,23 +70,23 @@ public class UserStorageInMemory implements UserStorage {
     }
 
     @Override
-    public ArrayList<User> findAllFriends(int userId) {
+    public Optional<List<User>> findAllFriends(int userId) {
         ArrayList<User> allFriends = new ArrayList<>();
         for(Integer i : users.get(userId).getFriends()) {
             allFriends.add(users.get(i));
         }
         log.info("Выведен список всех друзей с Id "+userId);
-        return allFriends;
+        return Optional.of(allFriends);
     }
 
     @Override
-    public ArrayList<User> findAllSameFriends(int userId, int anotherUserId) {
+    public Optional<List<User>> findAllSameFriends(int userId, int anotherUserId) {
         ArrayList<User> sameFriend = new ArrayList<>();
         for(Integer i : users.get(userId).getFriends()) {
             if(users.get(anotherUserId).getFriends().contains(i)){
                 sameFriend.add(users.get(i));
             }
         }
-        return sameFriend;
+        return Optional.of(sameFriend);
     }
 }

@@ -10,6 +10,8 @@ import ru.kirikura.yaproject_05_cinema.service.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
+
 @Slf4j
 @RestController
 @RequestMapping("/users")
@@ -22,22 +24,22 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> findAllUsers() throws ObjectNotFoundException {
+    public Optional<List<User>> findAllUsers() throws ObjectNotFoundException {
         return userService.findAllUsers();
     }
 
     @PostMapping
-    public User addUser(@Valid @RequestBody User user) throws ValidationException {
+    public Optional<User> addUser(@Valid @RequestBody User user) throws ValidationException {
         return userService.addUser(user);
     }
 
     @PutMapping
-    public User updateUser(@Valid @RequestBody User user) throws ValidationException, ObjectNotFoundException {
+    public Optional<User> updateUser(@Valid @RequestBody User user) throws ValidationException, ObjectNotFoundException {
         return userService.updateUser(user);
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable int id) throws ObjectNotFoundException {
+    public Optional<User> getUserById(@PathVariable int id) throws ObjectNotFoundException {
         return userService.getUserById(id);
     }
 
@@ -62,12 +64,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}/friend")
-    public List<User> findAllFriend(@PathVariable int id) throws ObjectNotFoundException {
+    public Optional<List<User>> findAllFriend(@PathVariable int id) throws ObjectNotFoundException {
         return userService.findAllFriends(id);
     }
 
     @GetMapping("/{id}/friend/common/{otherId}")
-    public List<User> findAllSameFriends(@PathVariable int id, @PathVariable int otherId) throws ObjectNotFoundException {
+    public Optional<List<User>> findAllSameFriends(@PathVariable int id, @PathVariable int otherId) throws ObjectNotFoundException {
         return userService.findAllSameFriends(id, otherId);
     }
 }

@@ -12,6 +12,7 @@ import ru.kirikura.yaproject_05_cinema.dao.FilmStorage;
 import ru.kirikura.yaproject_05_cinema.dao.impl.UserStorageInMemory;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -22,23 +23,23 @@ public class FilmService {
     FilmVaidation filmVaidation;
     UserValidation userValidation;
 
-    public List<Film> findAllFilms() throws ObjectNotFoundException {
+    public Optional<List<Film>> findAllFilms() throws ObjectNotFoundException {
         filmVaidation.checkIsFilmsEmpty(filmStorage);
         return filmStorage.findAllFilms();
     }
 
-    public Film addFilm(Film film) throws ValidationException {
+    public Optional<Film> addFilm(Film film) throws ValidationException {
         filmVaidation.checkIsFilmDataCorrect(film);
         return filmStorage.addFilm(film);
     }
 
-    public Film updateFilm(Film film) throws ObjectNotFoundException, ValidationException {
+    public Optional<Film> updateFilm(Film film) throws ObjectNotFoundException, ValidationException {
         filmVaidation.checkIsFilmDataCorrect(film);
         filmVaidation.checkIsFilmExists(filmStorage, film.getId());
         return filmStorage.updateFilm(film);
     }
 
-    public Film getFilmById(int id) throws ObjectNotFoundException {
+    public Optional<Film> getFilmById(int id) throws ObjectNotFoundException {
         filmVaidation.checkIsFilmExists(filmStorage, id);
         return filmStorage.getFilmById(id);
     }
@@ -63,7 +64,7 @@ public class FilmService {
         filmStorage.removeLike(postId, userId);
     }
 
-    public List<Film> findTopFilms(Integer count) {
+    public Optional<List<Film>> findTopFilms(Integer count) {
         if(count == null) {
             count = 10;
         }
